@@ -1,0 +1,3 @@
+name="Yop"
+[build]
+build_class = "builder::MyBuilder"

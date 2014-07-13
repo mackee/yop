@@ -14,3 +14,23 @@ footer {
 /* smart phones */
 @media screen and (max-device-width: 480px) {
 }
+
+::-webkit-input-placeholder {
+   color: #AAA;
+   text-align:center;
+}
+ 
+:-moz-placeholder { /* Firefox 18- */
+   color: #AAA;
+   text-align:center;
+}
+ 
+::-moz-placeholder {  /* Firefox 19+ */
+   color: #AAA;
+   text-align:center;
+}
+ 
+:-ms-input-placeholder {  
+   color: #AAA;
+   text-align:center;
+}

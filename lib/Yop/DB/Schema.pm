@@ -10,7 +10,7 @@ base_row_class 'Yop::DB::Row';
 table {
     name 'member';
     pk 'id';
-    columns qw(id name);
+    columns qw(id name uuid status created_at updated_at);
 };
 
 1;

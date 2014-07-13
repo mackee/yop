@@ -3,27 +3,55 @@ use strict;
 use warnings;
 use utf8;
 use Amon2::Web::Dispatcher::RouterBoom;
+use Try::Tiny;
+use Yop::Model::Member;
+use JSON::Types;
+use boolean;
+use Log::Minimal;
 
-any '/' => sub {
+get '/' => sub {
     my ($c) = @_;
-    my $counter = $c->session->get('counter') || 0;
-    $counter++;
-    $c->session->set('counter' => $counter);
-    return $c->render('index.tx', {
-        counter => $counter,
-    });
+    return $c->render("index.tx", {});
 };
 
-post '/reset_counter' => sub {
+post '/join' => sub {
     my $c = shift;
-    $c->session->remove('counter');
-    return $c->redirect('/');
+    my $name = $c->req->param("name");
+    my $uuid = $c->req->param("uuid");
+
+    my $result = try {
+        Yop::Model::Member->join(
+            name => $name,
+            uuid => $uuid,
+        );
+    }
+    catch {
+        critf($_);
+        return +{ result => bool false };
+    };
+
+    return $c->render_json($result);
 };
 
-post '/account/logout' => sub {
-    my ($c) = @_;
-    $c->session->expire();
-    return $c->redirect('/');
+post '/send' => sub {
+    my $c = shift;
+    my $name = $c->req->param("name");
+    my $uuid = $c->req->param("uuid");
+    my $target_name = $c->req->param("target_name");
+
+    my $result = try {
+        Yop::Model::Member->send(
+            name        => $name,
+            uuid        => $uuid,
+            target_name => $target_name,
+        );
+    }
+    catch {
+        critf($_);
+        +{ result => false }
+    };
+
+    return $c->render_json($result);
 };
 
 1;
